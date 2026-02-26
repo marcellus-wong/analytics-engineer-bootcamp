@@ -1,0 +1,29 @@
+models:
+  - name: stg_jaffle_shop__customers
+    columns:
+    # this is the name of the column in the staging table above, not the source table
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_jaffle_shop__orders
+    columns:
+    # this is the name of the column in the staging table above, not the source table
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null       
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+              # case sensitive
+                values: ['placed', 'shipped', 'completed', 'returned', 'return_pending'] 
+      - name: customer_id
+        data_tests:
+          - relationships: 
+              arguments:
+                # don't need curly brackets below because we're in yml file
+                to: ref('stg_jaffle_shop__customers')
+                field: customer_id
